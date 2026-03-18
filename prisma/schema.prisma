@@ -1,0 +1,67 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["tracing"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  holdings  Holding[]
+  analyses  AnalysisMetadata[]
+}
+
+model Holding {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tradingSymbol   String
+  isin            String?
+  quantity        Float    @default(0)
+  averagePrice    Float    @default(0)
+  platform        String   @default("MANUAL") // e.g., "MANUAL", "GROWW", "ZERODHA"
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model AnalysisMetadata {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status              String    // "refreshing", "completed", "failed"
+  interval            String    @default("1d")
+  range               String    @default("1y")
+  
+  diversificationScore String?
+  riskProfile         String?
+  topPerformer        String?
+  worstPerformer      String?
+  rebalancingNeeded   Boolean?
+  portfolioSummary    String?
+  sectorConcentration String?
+
+  createdAt           DateTime  @default(now())
+  completedAt         DateTime?
+  snapshots   AnalysisHoldingSnapshot[]
+
+  @@index([status, createdAt])
+}
+
+model AnalysisHoldingSnapshot {
+  id            Int              @id @default(autoincrement())
+  metadataId    Int
+  metadata      AnalysisMetadata @relation(fields: [metadataId], references: [id], onDelete: Cascade)
+  holdingId     Int?             // Optional, to keep snapshot even if holding is deleted
+  tradingSymbol String
+  quantity      Float
+  averagePrice  Float
+  advice        String           // e.g., "BUY", "SELL", "HOLD"
+  reasoning     String
+  rawJson       Json?            // Additional details from the ChatGPT analysis
+}
