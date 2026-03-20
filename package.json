@@ -7,8 +7,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "postinstall": "npm run prisma:generate",
-    "build": "npm run prisma:generate && tsc",
-    "start": "npm run prisma:migrate && node dist/index.js",
+    "build": "npm run prisma:generate && npm run prisma:migrate && tsc",
+    "start": "node dist/index.js",
     "db:migrate": "prisma migrate dev",
     "test": "jest",
     "test:coverage": "jest --coverage"
