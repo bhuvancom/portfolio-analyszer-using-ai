@@ -6,7 +6,10 @@ import analysisRoutes from './routes/analysisRoutes';
 import { CronService } from './services/cronService';
 
 // Initialize Cron Jobs
-CronService.init();
+if (!process.env.VERCEL) {
+    CronService.init();
+}
+
 
 const app = express();
 
@@ -34,10 +37,6 @@ app.get('/api/advisor/health', (req: Request, res: Response) => {
         status: "UP",
         service: "Vantage AI Portfolio Advisor (Express)",
         version: "1.0.0"
-    });
-});
-
-export default app;
     });
 });
 
