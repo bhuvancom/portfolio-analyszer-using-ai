@@ -12,25 +12,33 @@ if (!process.env.VERCEL) {
 
 
 const app = express();
+
+const corsOptions = {
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
+// 1. Enable CORS for all origins - MUST BE FIRST
+app.use(cors(corsOptions));
+
+// 2. Handle preflight requests for all routes
+// Express 5 catch-all wildcard is ':path(.*)' or '*'
+app.options(':path(.*)', cors(corsOptions));
+
+
+app.use(express.json());
+
+// Root routes after CORS
 app.all('/', (req, res) => {
     res.json({ message: "Welcome to Vantage AI Portfolio Advisor" });
 });
 app.all('/fevicon.ico', (req, res) => {
     res.send();
 });
-// Enable CORS for all origins
-app.use(cors({
-    origin: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-    credentials: true,
-    optionsSuccessStatus: 200
-}));
 
-// Handle preflight requests for all routes
-// AFTER (required in Express 5)
-app.options('*', cors());
-app.use(express.json());
 
 // Main Routes
 app.use('/api/auth', authRoutes);
