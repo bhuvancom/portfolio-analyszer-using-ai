@@ -10,7 +10,17 @@ CronService.init();
 
 const app = express();
 
-app.use(cors());
+// Enable CORS for all origins
+app.use(cors({
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    credentials: true,
+    optionsSuccessStatus: 200
+}));
+
+// Handle preflight requests for all routes
+app.options('*', cors());
 app.use(express.json());
 
 // Main Routes
