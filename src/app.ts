@@ -9,7 +9,9 @@ import { CronService } from './services/cronService';
 CronService.init();
 
 const app = express();
-
+app.all('/', (req, res) => {
+    res.json({ message: "Welcome to Vantage AI Portfolio Advisor" });
+});
 // Enable CORS for all roots
 app.use(cors({
     origin: (origin, callback) => {
