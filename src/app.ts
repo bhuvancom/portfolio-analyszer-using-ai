@@ -12,7 +12,12 @@ if (!process.env.VERCEL) {
 
 
 const app = express();
-
+app.all('/', (req, res) => {
+    res.json({ message: "Welcome to Vantage AI Portfolio Advisor" });
+});
+app.all('/fevicon.ico', (req, res) => {
+    res.send();
+});
 // Enable CORS for all origins
 app.use(cors({
     origin: true,
@@ -24,7 +29,7 @@ app.use(cors({
 
 // Handle preflight requests for all routes
 // AFTER (required in Express 5)
-app.options('(.*)', cors());
+app.options('*', cors());
 app.use(express.json());
 
 // Main Routes
