@@ -24,9 +24,8 @@ const corsOptions = {
 // 1. Enable CORS for all origins - MUST BE FIRST
 app.use(cors(corsOptions));
 
-// 2. Handle preflight requests for all routes
-// Express 5 catch-all wildcard is ':path(.*)' or '*'
-app.options(':path(.*)', cors(corsOptions));
+// 2. Handle preflight requests for all routes - Handled by app.use(cors()) above
+// No need for app.options() anymore as the middleware handles it globablly.
 
 
 app.use(express.json());
