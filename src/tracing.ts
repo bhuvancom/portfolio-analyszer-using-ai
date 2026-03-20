@@ -34,7 +34,15 @@ const sdk = new NodeSDK({
   ],
 });
 
-sdk.start();
+// Only start SDK if NOT on Vercel and NOT explicitly disabled
+const shouldStartTracing = !process.env.VERCEL && process.env.ENABLE_TRACING === 'true';
+
+if (shouldStartTracing) {
+  sdk.start();
+  console.log('OpenTelemetry Tracing initialized');
+} else if (process.env.VERCEL) {
+  console.log('Vercel environment detected: Skipping custom OpenTelemetry initialization');
+}
 
 export default sdk;
 

@@ -9,17 +9,12 @@ import { CronService } from './services/cronService';
 CronService.init();
 
 const app = express();
-app.all('/', (req, res) => {
-    res.json({ message: "Welcome to Vantage AI Portfolio Advisor" });
-});
-// Enable CORS for all roots
+
+// Enable CORS for all origins
 app.use(cors({
-    origin: (origin, callback) => {
-        // Allow all origins (origin will be undefined for local tools/cURL)
-        callback(null, true);
-    },
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
     credentials: true,
     optionsSuccessStatus: 200
 }));
@@ -39,6 +34,10 @@ app.get('/api/advisor/health', (req: Request, res: Response) => {
         status: "UP",
         service: "Vantage AI Portfolio Advisor (Express)",
         version: "1.0.0"
+    });
+});
+
+export default app;
     });
 });
 
