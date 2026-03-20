@@ -10,11 +10,14 @@ CronService.init();
 
 const app = express();
 
-// Enable CORS for all origins
+// Enable CORS for all roots
 app.use(cors({
-    origin: true,
+    origin: (origin, callback) => {
+        // Allow all origins (origin will be undefined for local tools/cURL)
+        callback(null, true);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
     credentials: true,
     optionsSuccessStatus: 200
 }));
